@@ -8,36 +8,37 @@ function pageinit(tray, normalEggCount, goldEggCount) {
 	})
 	// [보유 에그 표시]------------------------------------------------------------
 	const eggDOMs = []
-	for(let i = 0; i < 10; i++) {
-		eggDOMs.push({
-			el: 'div', className: 'egg-info', role: tray[i] == 0 ? null : 'button',
-			children: [
-				{ // 에그 그래픽 영역
-					el: 'div', className: 'egg-wrapper m-auto',
-					style: 'transform: scale(0)',
-					children: [
-						{ el: 'div', 
-							className: `egg${i < 9 ? tray[i] == 0 ? ' uncollected' : (' egg-' + (i + 1) + (i > 4 ? ' metallic' : '')) : ' metallic gold'}`,
-							children: [
-								{ el: 'div', className: 'fill' },
-								{ el: 'div', className: 'shading' },
-								{ el: 'div', className: 'key' },
-								{ el: 'div', className: 'highlight' }
-							]
-						}
-					]
-				},
-				{ // 에그 카운터 영역
-					el: 'div', className: 'egg-count-section text-center mt-2',
-					children: [
-						{
-							el: 'span', className: 'egg-count', innerText: tray[i] > 0 ? tray[i] : ''
-						}
-					]
-				}
-			]
-		});
+	for(let i = 0; i < 9; i++) {
+		eggDOMs.push({ el: 'div', className: 'egg-info', role: tray[i] == 0 ? null : 'button', children: [
+			// 에그 그래픽 영역
+			{ el: 'div', className: 'egg-wrapper m-auto', style: 'transform: scale(0)', children: [
+				{ el: 'div', className: `egg${tray[i] == 0 ? ' uncollected' : (' egg-' + (i + 1) + (i > 4 ? ' metallic' : ''))}`, children: [
+					{ el: 'div', className: 'fill' },
+					{ el: 'div', className: 'shading' },
+					{ el: 'div', className: 'key' },
+					{ el: 'div', className: 'highlight' }
+				]}
+			]},
+			// 에그 카운터 영역
+			{ el: 'div', className: 'egg-count-section text-center mt-2', children: [
+				{ el: 'span', className: 'egg-count', innerText: tray[i] > 0 ? tray[i] : '' }
+			]}
+		]});
 	}
+	// 골드 추가
+	eggDOMs.push({ el: 'div', className: 'egg-info', role: 'button', children: [
+		{ el: 'div', className: 'egg-wrapper m-auto', style: 'transform: scale(0)', children: [
+			{ el: 'div', className: 'egg metallic gold', children: [
+				{ el: 'div', className: 'fill' },
+				{ el: 'div', className: 'shading' },
+				{ el: 'div', className: 'key' },
+				{ el: 'div', className: 'highlight' }
+			]}
+		]},
+		{ el: 'div', className: 'egg-count-section text-center mt-2', children: [
+			{ el: 'span', className: 'egg-count', innerText: goldEggCount }
+		]}
+	]});	
 	document.querySelector('.egg-dimention-section').append(createElement(eggDOMs));
 	// 에그를 하나씩 표시
 	anime({
