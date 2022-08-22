@@ -587,6 +587,8 @@ text-shadow: 2px 1px 1px rgba(232,232,232,0.9);
 @media (max-width: 576px){
 	.egg-detail-section{
 		width: 100%;
+		height: 100vh;
+		overflow-y: scroll;
 	}
 	
 	.egg-detail-section .egg-wrapper {
