@@ -195,8 +195,13 @@
 				break;
 			case '2':
 				// [[수식어 위치1, 수식어 위치2, ...], [피수식어 위치1, 피수식어 위치2, ...], ...]
-				command.answer = JSON.stringify([ findPositions(battleContext, '.modifier'),
-						  						findPositions(battleContext, '.modificand') ]);
+				const modifiers = findPositions(battleContext, '.modifier'),
+					modificands = findPositions(battleContext, '.modificand');
+				if((modifiers.length || modificands.length) == 0) {
+					alert('수식어 혹은 피수식어를 1개 이상 선택해 주세요.')
+					return;
+				}
+				command.answer = JSON.stringify([ modifiers, modificands ]);
 				break;
 			case '3':
 				let blank = battleContext.querySelector('.pick-right');
@@ -462,8 +467,9 @@
 		
 		// 문장 길이에 따라 난이도 선택을 제한( engLength > 80: 중↑, engLength > 150: 상)
 		const engLength = semanticsDiv.textContent.length;
-		makerDiv.querySelector('.battle-level-select[value="A"]').disabled = engLength > 80;
-		makerDiv.querySelector('.battle-level-select[value="B"]').disabled = engLength > 150;
+		//makerDiv.querySelector('.battle-level-select[value="A"]').disabled = engLength > 80;
+		//makerDiv.querySelector('.battle-level-select[value="B"]').disabled = engLength > 150;
+		
 		makerDiv.querySelector('.battle-level-select[value="B"]').checked = engLength > 80;
 		makerDiv.querySelector('.battle-level-select[value="C"]').checked = engLength > 150;
 		
