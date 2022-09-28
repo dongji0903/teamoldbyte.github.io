@@ -1,9 +1,1 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN"
-              "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
-
-<svg xmlns="http://www.w3.org/2000/svg"
-     viewBox="0 0 50 50">
-  <line x1="15" x2="35" y1="23" y2="23" stroke="black" stroke-width="3"/>
-  <line x1="15" x2="35" y1="27" y2="27" stroke="black" stroke-width="3"/>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50"><defs><linearGradient id="a" gradientTransform="rotate(90)"><stop offset="5%" stop-color="#F4F2AB"/><stop offset="20%" stop-color="gold"/><stop offset="80%" stop-color="gold"/><stop offset="95%" stop-color="#70260A"/></linearGradient></defs><rect id="b" width="20" height="3" x="15" y="21.5" fill="url(#a)" stroke="#b8860b" stroke-width=".1" rx=".5"/><use y="4" href="#b"/></svg>
