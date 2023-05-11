@@ -964,11 +964,17 @@
 	 * @param battle 기등록된 배틀 (없으면 비움) 
 	 */
 	function appendContext(eng, maker, battle) {
+		const contextChildren = battle ? (createRangedSentenceBlock(eng, battle)) : eng;
+		if(!!battle && contextChildren.length > 1) {
+			for(let i = contextChildren.length - 1; i > 0; i--) {
+				contextChildren.splice(i, 0, ' ')
+			}
+		}
 		appendClassifiedElement({
 			el: 'div', className: 'row pe-2', children: [
 				{el: 'label', className: 'col-auto lh-1 my-auto text-white fw-bold', textContent: '본문'},
 				{el: 'div', className: 'battle-context fs-5 bg-white mt-3 px-2 col form-control',
-					children: battle ? createRangedSentenceBlock(eng, battle) : eng, onmouseup: () => wrapText(maker)}
+					children: contextChildren, onmouseup: () => wrapText(maker)}
 			]}, maker);
 	}
 	// Regular expression that matches any character that is not whitespace or punctuation
@@ -1453,7 +1459,15 @@
 					$(this).find('.js-open-edit-battle-context').hide();
 				} : '', children: [
 				{ el: 'label', className: 'col-1 fw-bold me-2', textContent: '본문' },
-				{ el: 'div', className: 'battle-context pb-3', 'data-battle-type': battleType, children: createRangedSentenceBlock(eng, battle)},
+				{ el: 'div', className: 'battle-context pb-3 ws-breakspaces', 'data-battle-type': battleType, children: (() => {
+						const contextChildren = battle ? createRangedSentenceBlock(eng, battle) : eng;
+						if(!!battle && contextChildren.length > 1) {
+							for(let i = contextChildren.length - 1; i > 0; i--) {
+								contextChildren.splice(i, 0, ' ')
+							}
+						}
+						return contextChildren;
+					})()},
 				_memberId == memberId ? {
 					el: 'button', className: 'js-open-edit-battle-context btn btn-sm btn-fico', textContent: '본문 수정', style: 'display: none;', onclick: function() {
 						const $container = $(this).closest('.context-section');
@@ -1645,7 +1659,12 @@
 										
 										$(this).closest('.edit-context-section').hide();
 										$(this).closest('.context-section').children('.battle-context').show()[0]
-											.replaceChildren(createElement(createRangedSentenceBlock(eng,command)));
+											.replaceChildren(createElement((() => {
+												const contextChildren = createRangedSentenceBlock(eng,command);
+												for(let i = contextChildren.length - 1; i > 0; i--) {
+													contextChildren.splice(i, 0, ' ')
+												}
+											})));
 									});
 								},error: function() {
 									alertModal('본문 수정에 실패했습니다.');
@@ -1727,7 +1746,7 @@
 		const contextChildren = [];
 		const { battleType, ask } = battle;
 
-		const getOffsetStr = (start, _end) => eng.substring(offsetPos, start);
+		const getOffsetStr = (start, end) => eng.substring(start, end);
 
 		const getAnswerClass = (start, end) => {
 			const answer = answers.find(a => a[0] == start && a[1] == end);
@@ -1806,7 +1825,7 @@
 			 */
 				const [[answer_start, answer_end], _answerText, wrongText] = answers;
 				examples.sort(sortByPosition).forEach(([start, end], j, arr) => {
-					const leftStr = getOffsetStr(start, end);
+					const leftStr = getOffsetStr(offsetPos, start);
 					if(leftStr) contextChildren.push(leftStr);
 					const span = {
 						el: 'span',
@@ -1831,7 +1850,7 @@
 				example = [[보기1start,보기1end],[보기2start,보기2end],...]
 			 */
 			 	examples.sort(sortByPosition).forEach(([start, end], j, arr) => {
-					const leftStr = getOffsetStr(start, end);
+					const leftStr = getOffsetStr(offsetPos, start);
 					if(leftStr) contextChildren.push(leftStr);
 					contextChildren.push({
 						el: 'span',
@@ -1851,7 +1870,7 @@
 				example = [[[대상start,대상end],정답텍스트],[[대상start,대상end],정답텍스트],...]
 			 */	
 			 	examples.sort((a,b) => a[0][0] - b[0][0]).forEach(([[start, end], _text], j, arr) => {
-					const leftStr = getOffsetStr(start, end);
+					const leftStr = getOffsetStr(offsetPos, start);
 					if(leftStr) contextChildren.push(leftStr);
 					contextChildren.push({
 						el: 'span',
@@ -1871,7 +1890,7 @@
 				example = [추가 단어1, 추가 단어2, ...](추가 단어를 입력했을 경우)
 			 */	
 				const [start, end] = JSON.parse(ask)[0];
-				const leftStr = eng.substring(offsetPos, start);
+				const leftStr = getOffsetStr(offsetPos, start);
 				const targetStr = eng.substring(start, end);
 				const rightStr = eng.substring(end);
 				if(leftStr) contextChildren.push(leftStr);
@@ -1911,7 +1930,7 @@
 				answer = [정답텍스트]
 			*/
 				const [start, end] = examples[0];
-				const leftStr = eng.substring(offsetPos, start);
+				const leftStr = getOffsetStr(offsetPos, start);
 				const targetStr = eng.substring(start, end);
 				const rightStr = eng.substring(end);
 				if(leftStr) contextChildren.push(leftStr);
